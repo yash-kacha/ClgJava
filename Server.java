@@ -12,7 +12,7 @@ public class Server implements Runnable {
     @Override
     public void run() {
         try {
-            ServerSocket ss = new ServerSocket(7562);
+            ServerSocket ss = new ServerSocket(2589);
             System.out.println("Server is waiting for a client connection...");
             Socket s = ss.accept();
 

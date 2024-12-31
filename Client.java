@@ -10,7 +10,7 @@ public class Client implements Runnable {
     public void run() {
         try {
             // Connect to the server
-            Socket s = new Socket("localhost", 7562);
+            Socket s = new Socket("localhost", 2589);
             DataOutputStream dos = new DataOutputStream(s.getOutputStream());
             Scanner sc = new Scanner(System.in);
 
