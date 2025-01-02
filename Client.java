@@ -1,5 +1,3 @@
-package com.mycompany.primepass;
-
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -10,7 +8,7 @@ public class Client implements Runnable {
     public void run() {
         try {
             // Connect to the server
-            Socket s = new Socket("localhost", 2589);
+            Socket s = new Socket("localhost", 8586);
             DataOutputStream dos = new DataOutputStream(s.getOutputStream());
             Scanner sc = new Scanner(System.in);
 

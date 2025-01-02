@@ -1,4 +1,3 @@
-package com.mycompany.primepass;
 
 import java.io.*;
 import java.net.*;
