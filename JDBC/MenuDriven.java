@@ -26,6 +26,9 @@ public class Second {
                 case 4:
                     Delete(sc);
                     break;
+                case 5:
+                    Find(sc);
+                    break;
                 default:
                     System.out.println("Enter a valid input");
             }
@@ -125,4 +128,29 @@ public class Second {
             System.out.println(e);
         }
     }
+
+    public static void Find(Scanner sc) {
+    try (Connection con = getConnection()) {
+        PreparedStatement ps = con.prepareStatement("SELECT * FROM employee WHERE id = ?");
+
+        System.out.print("Enter ID to find: ");
+        int id = sc.nextInt();
+
+        ps.setInt(1, id);
+
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            System.out.println("Record Found:");
+            System.out.println("ID: " + rs.getInt("id"));
+            System.out.println("Name: " + rs.getString("name"));
+            System.out.println("Salary: " + rs.getInt("salary"));
+        } else {
+            System.out.println("No record found with ID: " + id);
+        }
+
+    } catch (Exception e) {
+        System.out.println(e);
+    }
+}
 }
