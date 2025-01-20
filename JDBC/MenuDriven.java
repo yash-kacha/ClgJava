@@ -1,7 +1,9 @@
+package javaapplication2;
+
 import java.sql.*;
 import java.util.Scanner;
 
-public class Second {
+public class JavaApplication2 {
 
     public static void main(String[] args) {
 
@@ -9,10 +11,12 @@ public class Second {
 
         for (;;) {
             System.out.print(
-                    "1 = Select ||  2 = Insert || 3 = Update || 4 = Delete || 0 = Exit  :: ");
+                    "1 = Select ||  2 = Insert || 3 = Update || 4 = Delete || 5 = Find || 6 = UpdateCollumeName || 0 = Exit  :: ");
             int temp = sc.nextInt();
 
-            if (temp == 0) break;
+            if (temp == 0) {
+                break;
+            }
             switch (temp) {
                 case 1:
                     Select();
@@ -29,10 +33,14 @@ public class Second {
                 case 5:
                     Find(sc);
                     break;
+                case 6:
+                    UpdateCollumeName(sc);
+                    break;
                 default:
                     System.out.println("Enter a valid input");
             }
         }
+
         sc.close();
     }
 
@@ -50,12 +58,50 @@ public class Second {
         }
     }
 
-    public static void Select() {
-        try (Connection con = getConnection(); Statement st = con.createStatement()) {
+    public static void UpdateCollumeName(Scanner sc) {
+        try (Connection con = getConnection(); Statement ps = con.createStatement()) {
 
+            sc.nextLine();
+            // Adjust SQL syntax based on your database
+            System.out.print("Enter previous name : ");
+            String oldn = sc.nextLine();
+
+            System.out.print("Enter new name : ");
+            String newn = sc.nextLine();
+
+            String sql = "ALTER TABLE employee RENAME COLUMN "+oldn+" TO " +newn; // For PostgreSQL
+            // String sql = "ALTER TABLE employee CHANGE name name1 VARCHAR(255)"; // For MySQL
+
+            int rows = ps.executeUpdate(sql);
+            System.out.println(rows + " row(s) updated.");
+
+        } catch (SQLException e) {
+            System.out.println("SQL Error: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
+    }
+//   RENAME COLUMN table-Name.simple-Column-Name TO simple-Column-Name Examples
+
+    public static void Select() {
+        try {
+            Connection con = getConnection();
+            Statement st = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = st.executeQuery("SELECT * FROM employee");
 
+//            for (int i = 1; i <= 1; i++) {
+//                rs.next();
+//            }
+//            rs.updateInt(1, 1);
+//            rs.updateString(2, "a");
+//            rs.updateInt(3, 1);
+//
+//            rs.updateRow();
+//
+//            rs.beforeFirst();
             System.out.println("  ID  |  Name  |  Salary |");
+
             while (rs.next()) {
                 System.out.print("  " + rs.getInt(1) + " | ");
                 System.out.print(rs.getString(2) + "  |  ");
@@ -130,27 +176,27 @@ public class Second {
     }
 
     public static void Find(Scanner sc) {
-    try (Connection con = getConnection()) {
-        PreparedStatement ps = con.prepareStatement("SELECT * FROM employee WHERE id = ?");
+        try (Connection con = getConnection()) {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM employee WHERE id = ?");
 
-        System.out.print("Enter ID to find: ");
-        int id = sc.nextInt();
+            System.out.print("Enter ID to find: ");
+            int id = sc.nextInt();
 
-        ps.setInt(1, id);
+            ps.setInt(1, id);
 
-        ResultSet rs = ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
 
-        if (rs.next()) {
-            System.out.println("Record Found:");
-            System.out.println("ID: " + rs.getInt("id"));
-            System.out.println("Name: " + rs.getString("name"));
-            System.out.println("Salary: " + rs.getInt("salary"));
-        } else {
-            System.out.println("No record found with ID: " + id);
+            if (rs.next()) {
+                System.out.println("Record Found:");
+                System.out.println("ID: " + rs.getInt("id"));
+                System.out.println("Name: " + rs.getString("name"));
+                System.out.println("Salary: " + rs.getInt("salary"));
+            } else {
+                System.out.println("No record found with ID: " + id);
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
         }
-
-    } catch (Exception e) {
-        System.out.println(e);
     }
-}
 }
